@@ -35,3 +35,4 @@ def health():
 def crash():
     # Nur für die Demo: Prozess beendet sich, Kubernetes startet den Container neu
     os._exit(1)
+    
