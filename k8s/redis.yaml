@@ -1,0 +1,3 @@
+cd /root/whoami-demo && git pull
+kubectl apply -f k8s/redis.yaml
+kubectl get pods -o wide
