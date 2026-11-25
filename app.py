@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 START = time.time()
-request_count = 0  # Zähler pro Pod, zeigt "Stateless" sehr anschaulich
+request_count = 0  # Zähler pro Prozess (Gunicorn-Worker), zeigt "Stateless" sehr anschaulich
 
 
 @app.get("/")
@@ -19,8 +19,8 @@ def info():
         pod_ip=os.getenv("POD_IP", "unbekannt"),
         node=os.getenv("NODE_NAME", "unbekannt"),
         version=os.getenv("APP_VERSION", "dev"),  # Git-Commit
-        uptime_seconds=int(time.time() - START),
-        requests_served_by_this_pod=request_count,
+        process_uptime_seconds=int(time.time() - START),
+        process_requests_served=request_count,
         timestamp=datetime.now(timezone.utc).isoformat(),
         client_ip=request.headers.get("X-Forwarded-For", request.remote_addr),
     )
