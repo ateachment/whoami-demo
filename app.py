@@ -29,10 +29,9 @@ def info():
 @app.get("/health")
 def health():
     return {"status": "ok"}
-'''
+
 @app.get("/crash")
 def crash():
     # Nur für die Demo: Prozess beendet sich, Kubernetes startet den Container neu
     os._exit(1)
 
-'''
