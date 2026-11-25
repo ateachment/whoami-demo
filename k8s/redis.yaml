@@ -1,3 +1,41 @@
-cd /root/whoami-demo && git pull
-kubectl apply -f k8s/redis.yaml
-kubectl get pods -o wide
+# Redis: gemeinsamer Zwischenspeicher für den Zähler requests_total
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      # Demo-Vereinfachung: Redis läuft immer auf node-a, weil in der Demo node-b heruntergefahren wird.
+      # Die Anti-Affinität des Web-Deployments betrifft nur app=web-demo, nicht Redis.
+      nodeSelector:
+        kubernetes.io/hostname: k3s-loadbalancing-node-a
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          periodSeconds: 3
+---
+# Service: macht Redis im Cluster unter dem Namen "redis" erreichbar (ClusterIP, nicht von außen)
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+    
