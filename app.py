@@ -64,10 +64,14 @@ def crash():
     os._exit(1)
 
 
+
+
 # 1x1 Pixel, transparentes GIF
 PIXEL = base64.b64decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
 
 @app.get("/ping.gif")
 def ping():
+    # Unsichtbares GIF ausliefern, damit der Status des Microservices in Moodle mit JavaScript überprüft werden kann
+    # (Eine andere Response ist wegen CORS nicht erlaubt. Bilder dürfen von jeder Domain geladen werden.)
     # Kein Cache, sonst zeigt der Browser einen alten Zustand
     return Response(PIXEL, mimetype="image/gif", headers={"Cache-Control": "no-store"})
