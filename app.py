@@ -1,3 +1,4 @@
+import base64
 import os
 import socket
 import threading
@@ -5,7 +6,7 @@ import time
 from datetime import datetime, timezone
 
 import redis
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 
 app = Flask(__name__)
 
@@ -61,3 +62,12 @@ def health():
 def crash():
     # Nur für die Demo: Prozess beendet sich, Kubernetes startet den Container neu
     os._exit(1)
+
+
+# 1x1 Pixel, transparentes GIF
+PIXEL = base64.b64decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")
+
+@app.get("/ping.gif")
+def ping():
+    # Kein Cache, sonst zeigt der Browser einen alten Zustand
+    return Response(PIXEL, mimetype="image/gif", headers={"Cache-Control": "no-store"})
