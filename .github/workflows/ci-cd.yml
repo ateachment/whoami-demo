@@ -6,6 +6,7 @@ on:
     paths-ignore:
       - 'haproxy/**'
       - 'k8s/**'
+      - 'graphics/**'
 
 permissions:
   contents: read
